@@ -1,0 +1,14 @@
+---
+# vars file for activemq
+
+# назначение переменных
+activemq_port: "80"
+memory_usage: "61"
+store_usage: "115 gb"
+temp_usage: "48 gb"
+load_link: "http://archive.apache.org/dist/activemq/5.16.3/apache-activemq-5.16.3-bin.tar.gz"
+load_to_file: "/tmp/pack.tar.gz"
+unpack_to: "/tmp"
+unpacked_activemq: "/tmp/apache-activemq-5.16.3"
+java_home: "/usr/lib/jvm/java-1.8.0/"
+jre_home: "/usr/lib/jvm/java-1.8.0/jre/"

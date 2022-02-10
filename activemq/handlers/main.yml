@@ -1,0 +1,8 @@
+---
+# handlers file for activemq
+
+# обработчик для перезапуска systemctl (помогает системе узнать об обновлении сервисов)
+- name: restart_systemctl
+  shell: 
+    cmd: "systemctl daemon-reload && systemctl reset-failed"
+    chdir: /usr/lib/systemd/system/

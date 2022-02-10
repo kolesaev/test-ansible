@@ -1,0 +1,35 @@
+---
+
+
+# удаление папки apache-activemq-5.16.3 из папки /tmp, если она существует
+- name: Remove apache-activemq-5.16.3 folder
+  file:
+    path: "{{ unpacked_activemq }}"
+    state: absent
+  when: unpack_folder.stat.exists
+
+# удаление архива activemq из папки /tmp, если он существует
+- name: Remove archive
+  file:
+    path: "{{ load_to_file }}"
+    state: absent
+  when: archive_file.stat.exists
+
+# скачивание apache-activemq-5.16.3 в папку /tmp
+- name: Load ActiveMQ
+  get_url:
+    url: "{{ load_link }}"
+    dest: "{{ load_to_file }}"
+
+# распаковывание архива в папку /tmp
+- name: Extract archive
+  unarchive:
+    src: "{{ load_to_file }}"
+    dest: "{{ unpack_to }}"
+    remote_src: yes
+
+# удаляем скачанный архив из папки /tmp
+- name: Remove archive
+  file:
+    path: "{{ load_to_file }}"
+    state: absent

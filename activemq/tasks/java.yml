@@ -1,0 +1,24 @@
+---
+
+
+# устанавка java
+- name: Install OpenJDK
+  yum:
+    name: java-1.8.0-openjdk-devel
+    state: latest
+
+# создание environment variable JAVA_HOME
+- name: Export variable JAVA_HOME
+  lineinfile:
+    dest: /etc/profile
+    regexp: '^export JAVA_HOME'
+    line: 'export JAVA_HOME="{{ java_home }}"'
+    state: present
+
+# создание environment variable JRE_HOME
+- name: Export variable JRE_HOME
+  lineinfile:
+    dest: /etc/profile
+    regexp: '^export JRE_HOME'
+    line: 'export JRE_HOME="{{ jre_home }}"'
+    state: present

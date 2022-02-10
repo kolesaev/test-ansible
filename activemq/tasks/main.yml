@@ -1,0 +1,6 @@
+---
+- include_tasks: checks.yml
+- include_tasks: dwnld.yml
+- include_tasks: java.yml
+- include_tasks: serviceprepare.yml
+- include_tasks: runservice.yml

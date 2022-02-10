@@ -1,0 +1,73 @@
+---
+
+
+# остановка сервиса activemq, если он существует
+- name: Stop old activemq.service
+  service:
+    name: activemq
+    state: stopped
+    enabled: no
+  when: service_file.stat.exists
+
+# удаление старой папки activemq из папки /opt, если она существует
+- name: Remove /opt/activemq folder
+  file:
+    path: "/opt/activemq"
+    state: absent
+  when: opt_activemq_folder.stat.exists
+
+# перемещение распакованного activemq в папку /opt
+- name: Move move unpacked folder
+  shell: "mv {{ unpacked_activemq }} /opt/activemq"
+
+# назначение прав на файлы activemq только для root
+- name: Change owner for activemq folder
+  file:
+    dest: /opt/activemq
+    owner: root
+    group: root
+    mode: 0644
+    recurse: yes
+
+# разрешение запуска исполняемого файла activemq
+- name: Allow bin execution
+  file:
+    dest: /opt/activemq/bin/activemq
+    mode: a+x
+  
+# замена activemq.xml из шаблона с учётом переменных
+- name: Replace activemq.xml
+  template:
+    src: activemq.xml.j2
+    dest: /opt/activemq/conf/activemq.xml
+    owner: root
+    mode: 0644
+  
+# замена jetty.xml из шаблона с учётом переменных
+- name: Replace jetty.xml
+  template:
+    src: jetty.xml.j2
+    dest: /opt/activemq/conf/jetty.xml
+    owner: root
+    mode: 0644
+
+# удаление старой конфигурации сервиса, если она существует
+- name: Remove old activemq.service
+  file:
+    path: /usr/lib/systemd/system/activemq.service
+    state: absent
+  when: service_file.stat.exists
+  # вызов обработчика для перезапуска systemctl
+  notify:
+    - restart_systemctl
+  
+# добавление новой конфигурации сервиса
+- name: Adding new activemq.service
+  template:
+    src: activemq.service.j2
+    dest: /usr/lib/systemd/system//activemq.service
+    owner: root
+    mode: 0644
+  # вызов обработчика для перезапуска systemctl
+  notify:
+    - restart_systemctl
