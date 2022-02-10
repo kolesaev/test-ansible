@@ -1,6 +1,19 @@
 ---
+
+# проверки наличия файлов и папок
 - include_tasks: checks.yml
+
+# загрузка и распаковка activemq
 - include_tasks: dwnld.yml
+
+# установка/обновление Java
 - include_tasks: java.yml
+
+# создание группы и пользователя
+- include_tasks: user.yml
+
+# подготовка файлов для сервиса, назначение прав
 - include_tasks: serviceprepare.yml
+
+# запуск сервиса
 - include_tasks: runservice.yml

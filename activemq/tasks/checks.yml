@@ -1,14 +1,15 @@
 ---
+
 # проверка наличия файла конфигурации старого сервиса activemq
 - name: Check if the service file exists
   stat:
-    path: /usr/lib/systemd/system/activemq.service
-  register: service_file
+    path: "{{ service_file }}"
+  register: srv_file
 
 # проверка существует ли папка с текущим activemq
 - name: Check if opt_activemq folder exists
   stat:
-    path: "/opt/activemq"
+    path: "{{ activemq_folder }}"
   register: opt_activemq_folder
 
 # проверка существует ли папка с распакованным activemq в папке /tmp

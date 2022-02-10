@@ -7,56 +7,61 @@
     name: activemq
     state: stopped
     enabled: no
-  when: service_file.stat.exists
+  when: srv_file.stat.exists
+  # вызов обработчика для перезапуска systemctl
+  notify:
+    - restart_systemctl
 
 # удаление старой папки activemq из папки /opt, если она существует
-- name: Remove /opt/activemq folder
+- name: Remove {{ activemq_folder }} folder
   file:
-    path: "/opt/activemq"
+    path: "{{ activemq_folder }}"
     state: absent
   when: opt_activemq_folder.stat.exists
 
 # перемещение распакованного activemq в папку /opt
 - name: Move move unpacked folder
-  shell: "mv {{ unpacked_activemq }} /opt/activemq"
+  shell: "mv {{ unpacked_activemq }} {{ activemq_folder }}"
 
-# назначение прав на файлы activemq только для root
+# назначение прав на файлы activemq только для user
 - name: Change owner for activemq folder
   file:
-    dest: /opt/activemq
-    owner: root
-    group: root
-    mode: 0644
+    dest: "{{ activemq_folder }}"
+    owner: "{{ activemq_user }}"
+    group: "{{ activemq_user }}"
+    mode: 0774
     recurse: yes
 
 # разрешение запуска исполняемого файла activemq
 - name: Allow bin execution
   file:
-    dest: /opt/activemq/bin/activemq
+    dest: "{{ activemq_folder }}/bin/activemq"
     mode: a+x
   
 # замена activemq.xml из шаблона с учётом переменных
 - name: Replace activemq.xml
   template:
-    src: activemq.xml.j2
-    dest: /opt/activemq/conf/activemq.xml
-    owner: root
-    mode: 0644
+    src: templates/activemq.xml.j2
+    dest: "{{ activemq_folder }}/conf/activemq.xml"
+    owner: "{{ activemq_user }}"
+    group: "{{ activemq_user }}"
+    mode: 0774
   
 # замена jetty.xml из шаблона с учётом переменных
 - name: Replace jetty.xml
   template:
-    src: jetty.xml.j2
-    dest: /opt/activemq/conf/jetty.xml
-    owner: root
-    mode: 0644
+    src: templates/jetty.xml.j2
+    dest: "{{ activemq_folder }}/conf/jetty.xml"
+    owner: "{{ activemq_user }}"
+    group: "{{ activemq_user }}"
+    mode: 0774
 
 # удаление старой конфигурации сервиса, если она существует
 - name: Remove old activemq.service
   file:
-    path: /usr/lib/systemd/system/activemq.service
+    path: "{{ service_file }}"
     state: absent
-  when: service_file.stat.exists
+  when: srv_file.stat.exists
   # вызов обработчика для перезапуска systemctl
   notify:
     - restart_systemctl
@@ -64,9 +69,9 @@
 # добавление новой конфигурации сервиса
 - name: Adding new activemq.service
   template:
-    src: activemq.service.j2
-    dest: /usr/lib/systemd/system//activemq.service
-    owner: root
+    src: templates/activemq.service.j2
+    dest: "{{ service_file }}"
+    owner: "root"
     mode: 0644
   # вызов обработчика для перезапуска systemctl
   notify:

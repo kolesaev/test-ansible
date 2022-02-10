@@ -2,13 +2,31 @@
 # vars file for activemq
 
 # назначение переменных
-activemq_port: "80"
-memory_usage: "61"
+
+
+# пользователь для запуска задач
+activemq_user: "activemq"
+# папка для установки activemq
+activemq_folder: "/opt/activemq"
+# порт activemq
+activemq_port: "8161"
+# memoryUsage
+memory_usage: "{{ ( ansible_memory_mb.real.total * 0.5 ) | int }} mb"
+# storeUsage
 store_usage: "115 gb"
+# tempUsage
 temp_usage: "48 gb"
+# ссылка для получения архива с activemq
 load_link: "http://archive.apache.org/dist/activemq/5.16.3/apache-activemq-5.16.3-bin.tar.gz"
+# путь скачивания архива с activemq
 load_to_file: "/tmp/pack.tar.gz"
-unpack_to: "/tmp"
-unpacked_activemq: "/tmp/apache-activemq-5.16.3"
+# временная папка
+temp_folder: "/tmp"
+# путь к распакованному во временной папке activemq
+unpacked_activemq: "{{ temp_folder }}/apache-activemq-5.16.3"
+# путь для environment JAVA_HOME
 java_home: "/usr/lib/jvm/java-1.8.0/"
+# путь для environment JRE_HOME
 jre_home: "/usr/lib/jvm/java-1.8.0/jre/"
+# путь к файлу конфигурации сервиса
+service_file: "/usr/lib/systemd/system/activemq.service"

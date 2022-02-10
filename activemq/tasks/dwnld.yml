@@ -25,10 +25,10 @@
 - name: Extract archive
   unarchive:
     src: "{{ load_to_file }}"
-    dest: "{{ unpack_to }}"
+    dest: "{{ temp_folder }}"
     remote_src: yes
 
-# удаляем скачанный архив из папки /tmp
+# удаление скачанного архива из папки /tmp
 - name: Remove archive
   file:
     path: "{{ load_to_file }}"

@@ -1,0 +1,19 @@
+---
+# создание группы для пользователя, если используется не root
+- name: Create group for user
+  group:
+    name: "{{ activemq_user }}"
+    system: yes
+    state: present
+  when: 'activemq_user != "root"'
+
+# создание пользователя, если используется не root
+- name: Create user
+
+  user:
+    name: "{{ activemq_user }}"
+    group: "{{ activemq_user }}"
+    system: yes
+    create_home: False
+    state: present
+  when: 'activemq_user != "root"'

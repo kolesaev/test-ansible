@@ -1,7 +1,7 @@
 ---
 
 
-# сервиса activemq и разрешение автозапуска при загрузке
+# запуск сервиса activemq и разрешение автозапуска при загрузке
 - name: Run a new service and set autorun on boot
   systemd:
     name: activemq
