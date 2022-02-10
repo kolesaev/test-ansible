@@ -6,6 +6,11 @@
     path: "{{ service_file }}"
   register: srv_file
 
+# остановить плейбук если сервис существует
+- name: Stop if service exists
+  meta: end_play
+  when: srv_file.stat.exists
+
 # проверка существует ли папка с текущим activemq
 - name: Check if opt_activemq folder exists
   stat:
