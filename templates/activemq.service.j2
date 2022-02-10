@@ -5,15 +5,12 @@ After=network.target
 
 [Service]
 Type=forking
-ExecStart=/opt/activemq/bin/activemq start
-ExecStop=/opt/activemq/bin/activemq stop
-User=root
-Group=root
+ExecStart={{ activemq_folder }}/bin/activemq start
+ExecStop={{ activemq_folder }}/bin/activemq stop
+User={{ activemq_user }}
+Group={{ activemq_user }}
 Restart=always
 RestartSec=9
-StandardOutput=syslog
-StandardError=syslog
-SyslogIdentifier=activemq
 
 [Install]
 WantedBy=multi-user.target
